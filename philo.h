@@ -6,7 +6,7 @@
 /*   By: chbuerge <chbuerge@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/24 14:06:10 by chbuerge          #+#    #+#             */
-/*   Updated: 2024/06/25 15:41:13 by chbuerge         ###   ########.fr       */
+/*   Updated: 2024/08/02 15:19:03 by chbuerge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <pthread.h> //threads
 #include <stdlib.h> // exit
+#include <sys/time.h> // timestamp
 
 
 // number_of_philosophers
@@ -25,40 +26,48 @@
 
 typedef struct s_data t_data;
 
-typedef struct s_fork
-{
-	int	fork_id;
-	pthread_mutex_t fork;
-}	t_fork;
 
 // structure of each philosopher
 typedef struct s_philo
 {
-	int		id;
-	t_fork	*left_fork;
-	t_fork	*right_fork;
-	t_data	*data;
+	t_data		*data;
+	int			id;
+	//
+	int			id_ate;
+	long long	last_meal;
+	pthread_t	thread_id;
+	int			left_fork;
+	int			right_fork;
 } t_philo;
 
 // overall structure that holds all the philosophers
 struct s_data
 {
-	int		philo_num;
-	long	time_to_die;
-	long	time_to_eat;
-	long	time_to_sleep;
-	long	times_must_eat;
-	int		simulation_end; // full or death
-	t_philo	*philos; // array to all philosophers
-	t_fork	*forks; // array to all the forks/ mutexes
+	// data from input
+	int				number_of_philosophers;
+	long			time_to_die;
+	long			time_to_eat;
+	long			time_to_sleep;
+	long			times_must_eat;
+	//
+	long long		first_timestamp;
+	pthread_mutex_t	*fork;
+	pthread_mutex_t	meal;
+	pthread_mutex_t	dead;
+	int				died;
+	//
+	t_philo			*philos; // array to all philosophers
+
+
 };
 
 // fork = mutex
 
 
+int	ft_init(t_data *data, char **input);
 
-
-
+int	ft_atoi(const char *str);
 void	ft_error_exit(char *error_message);
+
 
 int		ft_validate_input(int count, char **input);

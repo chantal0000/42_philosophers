@@ -6,19 +6,13 @@
 /*   By: chbuerge <chbuerge@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 15:25:25 by chbuerge          #+#    #+#             */
-/*   Updated: 2024/06/25 15:41:07 by chbuerge         ###   ########.fr       */
+/*   Updated: 2024/08/02 11:03:54 by chbuerge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-// writes error_message in red
-// and exits the program
-void	ft_error_exit(char *error_message)
-{
-	printf("%s\n", error_message);
-	exit(EXIT_FAILURE);
-}
+
 
 // check if char *str only contains of numbers
 int	ft_isdigit(char *str)
