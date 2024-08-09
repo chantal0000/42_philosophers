@@ -6,17 +6,19 @@
 /*   By: chbuerge <chbuerge@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 11:54:19 by chbuerge          #+#    #+#             */
-/*   Updated: 2024/08/02 15:16:48 by chbuerge         ###   ########.fr       */
+/*   Updated: 2024/08/09 10:55:26 by chbuerge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-
+// CHANGE
 long long	ft_timestamp()
 {
-	// just for now
-	return (100);
+	struct timeval	t;
+
+	gettimeofday(&t, NULL);
+	return (t.tv_sec * 1000 + t.tv_usec / 1000);
 }
 
 void	ft_init_mutex(t_data *data)
@@ -26,19 +28,16 @@ void	ft_init_mutex(t_data *data)
 	data->fork = malloc(sizeof(pthread_mutex_t) * (data->number_of_philosophers + 1));
 	if (!data->fork)
 		ft_error_exit("init mutex failed\n");
-
 	i = data->number_of_philosophers + 1;
-	while (i >= 1)
+	while (--i >= 1)
 	{
 		if (pthread_mutex_init(&(data->fork[i]), NULL))
 			ft_error_exit("init mutex failed\n");
-		i--;
 	}
 	if (pthread_mutex_init(&(data->meal), NULL))
 		ft_error_exit("init mutex failed\n");
 	if (pthread_mutex_init(&(data->dead), NULL))
 		ft_error_exit("init mutex failed\n");
-
 }
 
 
@@ -51,8 +50,8 @@ void	ft_init_mutex(t_data *data)
 
 t_philo *ft_init_philos(t_data *data)
 {
-	t_philo *philos;
-	int	i;
+	t_philo	*philos;
+	int		i;
 
 	i = 0;
 	philos = malloc(sizeof(t_philo) * (data->number_of_philosophers));
@@ -65,16 +64,19 @@ t_philo *ft_init_philos(t_data *data)
 		data->philos[i].id_ate = 0;
 		data->philos[i].last_meal = ft_timestamp();
 		data->philos[i].left_fork = i - 1;
-		data->philos[1].left_fork = data->number_of_philosophers;
+		data->philos[1].left_fork = data->number_of_philosophers; // maximum
 		data->philos[i].right_fork = i;
 		i++;
 	}
+	return (philos);
 }
 
 
-// initializing the user input
-int	ft_init(t_data *data, char **input)
+// initializing the user input (argv + 1)
+t_data	*ft_init_data(char **input)
 {
+	t_data *data;
+
 	data = malloc(sizeof(t_data) * 1);
 	if (!data)
 		ft_error_exit("init failed\n");
@@ -90,4 +92,5 @@ int	ft_init(t_data *data, char **input)
 	data->philos = ft_init_philos(data);
 	// init mutex?
 	ft_init_mutex(data);
+	return (data);
 }

@@ -6,7 +6,7 @@
 /*   By: chbuerge <chbuerge@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 15:24:43 by chbuerge          #+#    #+#             */
-/*   Updated: 2024/08/02 14:58:35 by chbuerge         ###   ########.fr       */
+/*   Updated: 2024/08/09 10:57:11 by chbuerge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,12 @@
 
 int	main(int argc, char **argv)
 {
-	t_data *data = NULL;
+	t_data	*data;
 	// validate input
 	if (ft_validate_input(argc -1, argv + 1) != 0)
 		ft_error_exit("invalid input");
-	ft_init(data, argv);
-	// parsing, fill structs
+	data = ft_init_data(argv + 1);
+	ft_start_simulation(data);
 
 	// init the data
 	// dinner start
