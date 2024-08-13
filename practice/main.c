@@ -6,7 +6,7 @@
 /*   By: chbuerge <chbuerge@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 15:22:38 by chbuerge          #+#    #+#             */
-/*   Updated: 2024/08/09 17:54:33 by chbuerge         ###   ########.fr       */
+/*   Updated: 2024/08/13 14:59:11 by chbuerge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void	*ft_routine(void *arg)
 	if (i % 2 != 0)
 		usleep(200000);
 	printf("hello from routine, thread %d\n", i);
-
 	usleep(2000000);
 	ft_routine(arg);
 	// return NULL;
@@ -53,10 +52,15 @@ t_input *ft_init_data(char **arg)
 
 	return (input);
 }
-t_philo	*ft_init_philo(t_input input)
+
+t_philo	*ft_init_philo(t_input input, int id)
 {
 	t_philo	*philo;
 	philo = malloc(sizeof (t_philo *));
+	philo->input = input;
+	philo->philo_id = id;
+
+
 
 	return (philo);
 }
@@ -70,9 +74,8 @@ t_table ft_init_table(t_input input) {
 	int i = 0;
 
 	while (i < input.number_of_philos) {
-		table.philos = ft_init_philo(input);
+		table.philos = ft_init_philo(input, i);
 		i++;
-
 	}
 	// loop for initalizing philos
 	// philo = ft_init_philo(input);
