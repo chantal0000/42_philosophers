@@ -6,7 +6,7 @@
 /*   By: chbuerge <chbuerge@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 15:22:01 by chbuerge          #+#    #+#             */
-/*   Updated: 2024/08/13 14:50:26 by chbuerge         ###   ########.fr       */
+/*   Updated: 2024/08/14 13:04:00 by chbuerge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,15 @@
 
 struct s_philo;
 
-typedef struct s_table {
-	struct s_philo *philos;
-	pthread_mutex_t *forks;
-	// ...
-} t_table;
+
+
 
 typedef struct s_input {
 	int	number_of_philos;
 	int	time_to_eat;
 	int	time_to_sleep;
 	int	time_to_die;
+	int	num_of_meals;
 	// timestamp start of program
 	// ..
 } t_input;
@@ -44,7 +42,7 @@ typedef struct s_philo {
 	pthread_mutex_t	*mutex_left_fork;
 	pthread_mutex_t	*mutex_right_fork;
 	pthread_mutex_t	*mutex_number_meals_eaten;
-	pthread_mutex_t	*mutex_last_time_eating
+	pthread_mutex_t	*mutex_last_time_eating;
 	// timestamp??
 	// flag if the philo is dead?
 	// flag if philo is full (optional)
@@ -53,5 +51,15 @@ typedef struct s_philo {
 	// ...
 } t_philo;
 
+typedef struct s_table {
+	t_philo	**philos;
+	pthread_mutex_t	*forks;
+	pthread_t		*threads_phil;
+	long long	start_time;
+	// ... mutex here?
+} t_table;
+
+int	ft_atoi(const char *str);
+t_philo	**ft_init_philo(t_input input);
 
 #endif
