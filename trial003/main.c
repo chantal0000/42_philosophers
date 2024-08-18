@@ -6,7 +6,7 @@
 /*   By: chbuerge <chbuerge@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 15:23:11 by chbuerge          #+#    #+#             */
-/*   Updated: 2024/08/14 13:44:24 by chbuerge         ###   ########.fr       */
+/*   Updated: 2024/08/18 12:42:34 by chbuerge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,26 +40,26 @@ void	*ft_routine(void *i)
 }
 
 //where do i get the threads???
-int	ft_create_threads(t_table *table)
-{
-	int	i;
-	int	num_of_phil;
-	int *ids;
+// int	ft_create_threads(t_table *table)
+// {
+// 	int	i;
+// 	int	num_of_phil;
+// 	int *ids;
 
-	i = 0;
-	num_of_phil = table->philos[0]->input.number_of_philos;
-	ids = malloc(sizeof(int) * num_of_phil);
-	while (i < num_of_phil)
-	{
-	//	ids[i] = i;
-		// how to pass arg instead of NULL
-		if(pthread_create(&table->threads_phil[i], NULL, &ft_routine, &ids[i]) != 0)
-			return 1; // handle error
-		// printf("thread %d has started\n", i);
-		i++;
-	}
-	return (0);
-}
+// 	i = 0;
+// 	num_of_phil = table->philos[0]->input.number_of_philos;
+// 	ids = malloc(sizeof(int) * num_of_phil);
+// 	while (i < num_of_phil)
+// 	{
+// 	//	ids[i] = i;
+// 		// how to pass arg instead of NULL
+// 		if(pthread_create(&table->threads_phil[i], NULL, &ft_routine, &ids[i]) != 0)
+// 			return 1; // handle error
+// 		// printf("thread %d has started\n", i);
+// 		i++;
+// 	}
+// 	return (0);
+// }
 
 t_input *ft_init_input(char **arg)
 {
@@ -67,7 +67,7 @@ t_input *ft_init_input(char **arg)
 	t_input	*input;
 	input = malloc(sizeof(t_input));
 	if (!input)
-		return NULL; //handle error
+		return NULL;
 	input->number_of_philos = ft_atoi(arg[1]);
 	input->time_to_die = ft_atoi(arg[2]);
 	input->time_to_eat = ft_atoi(arg[3]);
@@ -79,58 +79,70 @@ t_input *ft_init_input(char **arg)
 	return (input);
 }
 
-t_table *ft_init_table(t_input input) {
+void	ft_init_forks(t_table *table)
+{
+	int	num_phil = table->philos->input.number_of_philos;
+	int i = 0;
+	table->forks = malloc(sizeof(pthread_mutex_t) * num_phil);
+	if (!table->forks)
+		table->forks = NULL;
+	while (i < num_phil)
+	{
+		if (pthread_mutex_init(&table->forks[i], NULL) != 0)
+			table->forks = NULL;
+		i++;
+	}
+}
+
+
+t_table *ft_init(t_input input) {
 
 	t_table *table;
 	table = malloc(sizeof(t_table));
 	if (!table)
 	{
-		//handle error
+		//free input here
+		return NULL;
 	}
-	table->philos = ft_init_philo(input);
-	table->start_time = ft_timestamp();
-	// table->philos = malloc(sizeof(t_philo) * input.number_of_philos);
-	// int i = 0;
-	// loop for initalizing philos
-	// philo = ft_init_philo(input);
-	// while (i < input.number_of_philos) {
-	// 	table->philos = ft_init_philo(input, i);
-	// 	i++;
-	// }
+	table->philos = malloc(sizeof(t_philo) * input.number_of_philos);
+	if (!table->philos)
+	{
+		NULL;
+	}
+	ft_init_forks(table);
+	if (table->forks == NULL)
+		return NULL;
+	ft_init_philo(input, table);
+	if (table->philos == NULL)
+		return NULL;
+	table->start_time = 0;
+	table->is_dead = false;
+	if (pthread_mutex_init(&(table->m_print), NULL) != 0)
+		NULL;
+	if (pthread_mutex_init(&(table->m_meal_count), NULL) != 0)
+		NULL;
+	if (pthread_mutex_init(&(table->m_death), NULL) != 0)
+		NULL;
 	return (table);
 }
 
-t_philo	**ft_init_philo(t_input input)
+void ft_init_philo(t_input input, t_table *table)
 {
-	t_philo	**philos;
 	int		i;
 
-	philos = malloc(sizeof(t_philo *) * input.number_of_philos);
 	i = 0;
-	if (!philos)
-	{
-		//handle error
-	}
 	while(i < input.number_of_philos)
 	{
-		philos[i] = malloc(sizeof(t_philo));
-		if(!philos[i])
-		{
-			//handle error
-		}
-		philos[i]->philo_id = i;
-		philos[i]->input = input;
+		table->philos[i].philo_id = i;
+		table->philos[i].input = input;
+		table->philos[i].meals_eaten = 0;
+		table->philos[i].eating = false;
+		table->philos[i].done_eating = false;
+		table->philos[i].t_last_meal = ft_timestamp();
+		table->philos[i].m_left_fork = &table->forks[i];
+		table->philos[i].m_right_fork = &table->forks[(i + 1) % input.number_of_philos];
 		i++;
 	}
-	//////
-	// t_philo	*philo;
-	// philo = malloc(sizeof (t_philo *));
-	// philo->input = input;
-	// philo->philo_id = id;
-
-
-
-	return (philos);
 }
 void	print_table(t_table *table)
 {
@@ -139,16 +151,16 @@ void	print_table(t_table *table)
 	printf("---------------------------------------------------------------\n");
 	printf("t_table:\n");
 	printf("table->start_time %lld\n", table->start_time);
-	while (i < table->philos[0]->input.number_of_philos)
+	while (i < table->philos->input.number_of_philos)
 	{
 		printf("\n");
 		printf("phil: i %d\n", i);
-		printf("philo_id %d\n", table->philos[i]->philo_id);
-		printf("input.number_of_philos %d\n", table->philos[i]->input.number_of_philos);
-		printf("input->time_to_die %d\n", table->philos[i]->input.time_to_die);
-		printf("input->time_to_eat %d\n", table->philos[i]->input.time_to_eat);
-		printf("input->time_to_sleep %d\n", table->philos[i]->input.time_to_die);
-		printf("input->num_of_meals %d\n", table->philos[i]->input.num_of_meals);
+		printf("philo_id %d\n", table->philos[i].philo_id);
+		printf("input.number_of_philos %d\n", table->philos[i].input.number_of_philos);
+		printf("input->time_to_die %d\n", table->philos[i].input.time_to_die);
+		printf("input->time_to_eat %d\n", table->philos[i].input.time_to_eat);
+		printf("input->time_to_sleep %d\n", table->philos[i].input.time_to_die);
+		printf("input->num_of_meals %d\n", table->philos[i].input.num_of_meals);
 		i++;
 	}
 	printf("\n");
@@ -161,23 +173,17 @@ int	main(int argc, char **argv)
 	t_table	*table;
 	t_input	*input;
 	// check input validity
-	if ( argc < 4 || argc > 6)
-	{
-		printf("error\n");
-		return 1;
-	}
+	if (ft_validate_input(argc - 1 , argv + 1) != 0)
+		ft_error_exit("invalid input\n");
 	// fill the data structures & init
 	input = ft_init_input(argv);
-	table = ft_init_table(*input);
+	table = ft_init(*input);
+	if (table == NULL)
+		ft_error_free(table, input, "error\n");
+	// free(input);
 	print_table(table);
-	// create threads
-	//SEGFAULT FROM FOLLOWING
-	// if (ft_create_threads(table) != 0)
-	// {
-	// 	//handle error
-	// 	return (EXIT_FAILURE);
-	// }
 	// start routine
 	//clean up
+	ft_error_free(table, input, "error\n");
 	return (0);
 }
