@@ -6,7 +6,7 @@
 /*   By: chbuerge <chbuerge@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 15:22:01 by chbuerge          #+#    #+#             */
-/*   Updated: 2024/08/18 12:37:36 by chbuerge         ###   ########.fr       */
+/*   Updated: 2024/08/23 16:38:12 by chbuerge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <stdbool.h> // bool
 
 struct s_philo;
+struct t_table;
 
 typedef struct s_input {
 	int	number_of_philos;
@@ -36,12 +37,13 @@ typedef struct s_philo {
 	t_input			input;
 	int				meals_eaten;
 	bool			eating;
-	bool			done_eating;
-	int				t_last_meal;
+	bool			finished_eating;
+	long long			t_last_meal;
 	int				philo_id;
 	pthread_t		thread;
 	pthread_mutex_t	*m_left_fork;
 	pthread_mutex_t	*m_right_fork;
+	struct s_table	*table; // reference to table data
 	// pthread_mutex_t	*mutex_number_meals_eaten;
 	// pthread_mutex_t	*mutex_last_time_eating;
 	// timestamp??
@@ -59,16 +61,29 @@ typedef struct s_table {
 	// pthread_t	*threads_phil;
 	// mutex for shared ressources
 	pthread_mutex_t	*forks;
-	pthread_mutex_t	m_print;
-	pthread_mutex_t	m_death;
-	pthread_mutex_t	m_meal_count;
+	pthread_mutex_t	m_print; // protects who can write
+	pthread_mutex_t	m_death; // protects is_dead flag
+	pthread_mutex_t	m_meal; // protects
 
 } t_table;
 
-int	ft_atoi(const char *str);
-void ft_init_philo(t_input input, t_table *table);
-void	ft_init_forks(t_table *table);
-void	ft_error_exit(char *error_message);
-void	ft_error_free(t_table *table, t_input *input, char *error_message);
-int	ft_validate_input(int count, char **input);
+// check if the input is valid
+
+// init all
+t_input		*ft_init_input(char **arg);
+void 		ft_init_philo(t_input input, t_table *table);
+void		ft_init_forks(t_table *table);
+t_table		*ft_init(t_input input);
+
+int			ft_atoi(const char *str);
+void		ft_error_exit(char *error_message);
+void		ft_error_free(t_table *table, t_input *input, char *error_message);
+int			ft_validate_input(int count, char **input);
+// void	ft_tracker(void *tracker_table);
+int			ft_start_procedure(t_table *table);
+long long	ft_timestamp(void);
+int			ft_death_check(t_table *table);
+int			ft_usleep(long long time);
+void	ft_print(char *str, t_philo *philo);
+void	*ft_tracker(void *tracker_table);
 #endif

@@ -6,11 +6,24 @@
 /*   By: chbuerge <chbuerge@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 15:25:25 by chbuerge          #+#    #+#             */
-/*   Updated: 2024/08/18 12:01:30 by chbuerge         ###   ########.fr       */
+/*   Updated: 2024/08/23 17:23:58 by chbuerge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+int	ft_usleep(long long time)
+{
+	long long start;
+
+	start = ft_timestamp(); // get timestamp in milliseconds
+	while((ft_timestamp() - start) < time) // check if desired time passed
+		usleep(1000); //sleep for 1000 microseconds
+	return (0);
+}
+
+
+
 
 // check if char *str only contains of numbers
 int	ft_isdigit(char *str)
@@ -81,8 +94,30 @@ int	ft_validate_input(int count, char **input)
 			return (1);
 		i++;
 	}
-	printf("input is valid\n");
+	// printf("input is valid\n");
 	return (0);
 }
+// convert the time from fct into miliseconds
+// combines seconds and microseconds into single value (ms)
+long long	ft_timestamp(void)
+{
+	long long		timestamp_ms;
+	struct timeval	current_time;
 
+	timestamp_ms = 0;
+	if (!gettimeofday(&current_time, NULL))
+		timestamp_ms = current_time.tv_sec * 1000 + current_time.tv_usec / 1000;
+	return (timestamp_ms);
+}
 
+// HELPER PRINT FUNCTION
+	//timestamp in miliseconds, id of philo, str action
+void	ft_print(char *str, t_philo *philo)
+{
+	int	time;
+	pthread_mutex_lock(&philo->table->m_print);
+	time = ft_timestamp() - philo->table->start_time;
+	if (!ft_death_check(philo->table))
+		printf("%d %d %s\n",time, philo->philo_id, str);
+	pthread_mutex_unlock(&philo->table->m_print);
+}

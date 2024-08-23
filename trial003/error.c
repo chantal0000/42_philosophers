@@ -6,7 +6,7 @@
 /*   By: chbuerge <chbuerge@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 11:03:02 by chbuerge          #+#    #+#             */
-/*   Updated: 2024/08/18 12:51:17 by chbuerge         ###   ########.fr       */
+/*   Updated: 2024/08/23 12:39:50 by chbuerge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,11 @@
 // and exits the program
 void	ft_error_exit(char *error_message)
 {
-	perror(error_message);
+	//delete printf later
+
+	printf("ft_error_exit\n");
+	if (error_message != NULL)
+		perror(error_message);
 	exit(EXIT_FAILURE);
 }
 
@@ -40,8 +44,8 @@ void	ft_error_free(t_table *table, t_input *input, char *error_message)
 		free(table->philos);
 	// pthread_mutex_destroy(&table->m_print);
 	// pthread_mutex_destroy(&table->m_death);
-	// pthread_mutex_destroy(&table->m_meal_count);
+	// pthread_mutex_destroy(&table->m_meal);
 	if(table)
 		free(table);
-	ft_error_exit(error_message);
+	ft_error_exit(NULL);
 }
