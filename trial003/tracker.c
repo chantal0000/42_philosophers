@@ -13,7 +13,13 @@
 #include "philo.h"
 
 // PROBLEM WITH FT_DEATH funtion
-
+//CHANGE HERE NAME
+void	die(t_table *table)
+{
+	pthread_mutex_lock(&table->m_death);
+	table->is_dead = true;
+	pthread_mutex_unlock(&table->m_death);
+}
 // checkt eigentlich nur ob is_dead is true
 // is_dead wird mit false init
 //
@@ -43,12 +49,12 @@ int	ft_death_check(t_table *table)
 
 int	ft_check_philo_died(t_philo *philo)
 {
-	long long time_since_last_meal;
+	//long long time_since_last_meal;
 
-	time_since_last_meal = ft_timestamp() - philo->t_last_meal;
+	//time_since_last_meal = ft_timestamp() - philo->t_last_meal;
 	// printf("philo->t_last_meal %lld\n", philo->t_last_meal);
 	pthread_mutex_lock(&philo->table->m_meal);
-	if (time_since_last_meal >= philo->input.time_to_die && !philo->eating)
+	if (ft_timestamp() - philo->t_last_meal >= philo->input.time_to_die && !philo->eating)
 	{
 		pthread_mutex_unlock(&philo->table->m_meal);
 		// printf("someone died time_since_last_meal %lld\n", time_since_last_meal / 1000);
@@ -78,6 +84,7 @@ int	ft_check_finished_eating(t_table *table)
 	// pthread_mutex_lock(&table->m_death);
 	// table->is_dead = true;
 	// pthread_mutex_unlock(&table->m_death);
+	die(table);
 	return (1);
 }
 
@@ -99,16 +106,15 @@ void	*ft_tracker(void *tracker_table)
 			if (ft_check_philo_died(&table->philos[i]))
 			{
 				ft_print("died", &table->philos[i]);
-				pthread_mutex_lock(&table->m_death);
-				table->is_dead = true;
-				pthread_mutex_unlock(&table->m_death);
+				die(table);
 			}
 			ft_check_finished_eating(table);
 			i++;
 		}
 	}
 	// function to check for death
-	return (0);
+	/// RETURN WHAAT
+	return (tracker_table);
 }
 
 

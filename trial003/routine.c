@@ -38,7 +38,7 @@ void	ft_sleep(t_philo *philo)
 	// print that you are sleeping
 	// printf("ft_sleep\n\n");
 	ft_print("is sleeping", philo);
-
+	ft_usleep(philo->input.time_to_sleep);
 	// sleep for as long as you should
 	// ft_usleep(philo->input.time_to_sleep);
 }
@@ -47,8 +47,23 @@ void	ft_sleep(t_philo *philo)
 void	ft_think(t_philo *philo)
 {
 	//print thinking
-		ft_print("is thinking", philo);
+	int t;
+	
+	ft_print("is thinking", philo);
 	//sleep for as long as you thinking
+	t = philo->input.time_to_die - philo->input.time_to_eat - philo->input.time_to_sleep;
+	if (!ft_death_check(philo->table))
+	{
+		if((philo->input.number_of_philos % 2) == 0)
+			usleep(10);
+		else
+		{
+			if (t <= 0)
+				usleep(900);
+			else
+				usleep(t * 900);
+		}
+	}
 }
 
 
@@ -76,11 +91,11 @@ int	ft_grab_forks(t_philo *philo)
 	// 	pthread_mutex_unlock(philo->m_right_fork);
 	// 	return (0);
 	// }
-	// if (philo->philo_id % 2 == 0)
-	// 	pthread_mutex_lock(philo->m_right_fork);
-	// else
-	// 	pthread_mutex_lock(philo->m_left_fork);
-	// ft_print("has taken a fork", philo);
+	if (philo->philo_id % 2 == 0)
+	 	pthread_mutex_lock(philo->m_right_fork);
+	else
+		pthread_mutex_lock(philo->m_left_fork);
+	 ft_print("has taken a fork", philo);
 	return (1);
 }
 // EAT
@@ -141,19 +156,18 @@ void *ft_routine(void *phil_philos)
 	table = philos->table;
 	// handle groups to sleep -> avoid deadlock
 	// loops until death_check returns 1
-	    if (philos->philo_id % 2 != 0)
+	if (philos->philo_id % 2 != 0)
     {
-        ft_usleep(1);  // Adjust the delay as needed (in microseconds)
+        ft_usleep(100);  // Adjust the delay as needed (in microseconds)
     }
 	while(!ft_death_check(table))
 	{
-		// handle eating
-		ft_eat(philos);
-		// printf("do i ever get here?\n\n");
-		// handle sleeping
-		ft_sleep(philos);
-		// handle thinking
-		ft_think(philos);
+        ft_eat(philos);
+        printf("Philosopher %d is now going to sleep\n", philos->philo_id);
+		ft_print("Test\n", philos);
+        ft_sleep(philos);
+        printf("Philosopher %d is now thinking\n", philos->philo_id);
+        ft_think(philos);
 	}
 	return (phil_philos); // return what here?
 }

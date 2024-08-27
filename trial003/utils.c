@@ -18,7 +18,7 @@ int	ft_usleep(long long time)
 
 	start = ft_timestamp(); // get timestamp in milliseconds
 	while((ft_timestamp() - start) < time) // check if desired time passed
-		usleep(1000); //sleep for 1000 microseconds
+		usleep(500); //sleep for 1000 microseconds
 	return (0);
 }
 
@@ -114,10 +114,10 @@ long long	ft_timestamp(void)
 	//timestamp in miliseconds, id of philo, str action
 void	ft_print(char *str, t_philo *philo)
 {
-	int	time;
+	long long	time;
 	pthread_mutex_lock(&philo->table->m_print);
 	time = ft_timestamp() - philo->table->start_time;
 	if (!ft_death_check(philo->table))
-		printf("%d %d %s\n",time, philo->philo_id, str);
+		printf("%lld %d %s\n",time, philo->philo_id, str);
 	pthread_mutex_unlock(&philo->table->m_print);
 }
