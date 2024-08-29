@@ -81,20 +81,13 @@ typedef struct s_table {
 // check if the input is valid
 
 // init all
-t_input		*ft_init_input(char **arg);
-void 		ft_init_philo(t_input input, t_table *table);
-void		ft_init_forks(t_table *table);
-int			ft_init(t_table *table, char **input);
 
-int			ft_atoi(const char *str);
-void		ft_error_exit(char *error_message);
-void		ft_error_free(t_table *table, t_input *input, char *error_message);
-int			ft_validate_input(int count, char **input);
-// void	ft_tracker(void *tracker_table);
-int			ft_start_procedure(t_table *table);
-long long	ft_timestamp(void);
-int			ft_death_check(t_table *table);
-int			ft_usleep(long long time);
-void	ft_print(char *str, t_philo *philo);
-void	*ft_tracker(void *tracker_table);
+int ft_init(t_table *table, char **input);
+
+// clean up
+int ft_clean_up(t_table *table);
+
+//helper
+int	ft_atoi(const char *str);
+
 #endif

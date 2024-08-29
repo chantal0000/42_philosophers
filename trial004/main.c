@@ -66,5 +66,6 @@ int	main(int argc, char **argv)
 	// start routine
 	//clean up
 	// ft_error_free(table, input, "error\n");
+	ft_clean_up(table);
 	return (0);
 }
