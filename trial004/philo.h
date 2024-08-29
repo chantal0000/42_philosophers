@@ -30,16 +30,20 @@ typedef struct s_input {
 } t_input;
 
 typedef struct s_philo {
-	//t_input			input;
-	int				meals_eaten;
+	int				id;
+	int				nb_of_meals_eaten;
 	bool			eating;
-	bool			finished_eating;
-	long long			t_last_meal;
-	int				philo_id;
-	pthread_t		thread;
+	bool			done_eating;
+
+	long long			time_since_last_meal; // init to what
+	struct s_table	*table; // reference to table data
+
+
 	pthread_mutex_t	*m_left_fork;
 	pthread_mutex_t	*m_right_fork;
-	struct s_table	*table; // reference to table data
+
+	pthread_t		thread;
+
 	// pthread_mutex_t	*mutex_number_meals_eaten;
 	// pthread_mutex_t	*mutex_last_time_eating;
 	// timestamp??
@@ -51,20 +55,26 @@ typedef struct s_philo {
 } t_philo;
 
 typedef struct s_table {
-	t_philo		*philos;
+// input / argv
+	int	nb_of_philos;
+	int	time_to_die;
+	int	time_to_eat;
+	int	time_to_sleep;
+	int	nb_of_meals; // number of meals a philosopher must eat until full, OPT. ARGV
+
+	bool		dead_flag; // false if no philo is dead, true if philo is dead
 	long long	start_time;
-	bool		is_dead;
+
+
+////
+
+	t_philo		*philos;
 	// pthread_t	*threads_phil;
 	// mutex for shared ressources
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	m_print; // protects who can write
-	pthread_mutex_t	m_death; // protects is_dead flag
+	pthread_mutex_t	m_dead; // protects is_dead flag
 	pthread_mutex_t	m_meal; // protects
-	int	number_of_philos;
-	int	time_to_eat;
-	int	time_to_sleep;
-	int	time_to_die;
-	int	num_of_meals;
 
 } t_table;
 
@@ -74,7 +84,7 @@ typedef struct s_table {
 t_input		*ft_init_input(char **arg);
 void 		ft_init_philo(t_input input, t_table *table);
 void		ft_init_forks(t_table *table);
-t_table		*ft_init(t_input input);
+int			ft_init(t_table *table, char **input);
 
 int			ft_atoi(const char *str);
 void		ft_error_exit(char *error_message);
