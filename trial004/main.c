@@ -6,7 +6,7 @@
 /*   By: chbuerge <chbuerge@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 15:23:11 by chbuerge          #+#    #+#             */
-/*   Updated: 2024/08/30 17:46:46 by chbuerge         ###   ########.fr       */
+/*   Updated: 2024/08/30 18:35:08 by chbuerge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,11 @@ int	main(int argc, char **argv)
 {
 	t_table	*table;
 	// check input validity
-	// if (ft_validate_input(argc - 1 , argv + 1) != 0)
-	// {
-	// 	printf("invalid input\n");
-	// 	return (1);
-	// }
+	if (ft_validate_input(argc, argv) != 0)
+	{
+		printf("invalid input\n");
+		return (1);
+	}
 	//	ft_error_exit("invalid input\n");
 	// fill the data structures & init
 	table = malloc(sizeof(t_table));

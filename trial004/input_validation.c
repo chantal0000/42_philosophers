@@ -6,7 +6,7 @@
 /*   By: chbuerge <chbuerge@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 17:39:30 by chbuerge          #+#    #+#             */
-/*   Updated: 2024/08/30 17:46:35 by chbuerge         ###   ########.fr       */
+/*   Updated: 2024/08/30 18:35:50 by chbuerge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,19 +33,18 @@ int	ft_validate_input(int count, char **input)
 {
 	int i;
 
-	i = 0;
-	if (count == 5 || count == 4)
+	i = 1;
+	if (count == 5 || count == 6)
 	{
 		while (i < count)
 		{
-			if (ft_isdigit(input[i]) != 0)
-			return (1);
-		i++;
+			if (ft_atoi(input[i]) <= 0)
+				return (1);
+			i++;
 		}
+		if (ft_atoi(input[1]) > 200)
+			return (1);
+		return (0);
 	}
-	if (ft_atoi(input[0]) > 200)
-		return (1);
-
-	printf("input is valid\n");
-	return (0);
+	return (1);
 }
