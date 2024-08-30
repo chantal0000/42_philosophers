@@ -6,7 +6,7 @@
 /*   By: chbuerge <chbuerge@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 15:22:01 by chbuerge          #+#    #+#             */
-/*   Updated: 2024/08/23 16:38:12 by chbuerge         ###   ########.fr       */
+/*   Updated: 2024/08/30 17:50:36 by chbuerge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,33 +25,17 @@
 struct s_philo;
 struct t_table;
 
-typedef struct s_input {
-
-} t_input;
 
 typedef struct s_philo {
 	int				id;
 	int				nb_of_meals_eaten;
-	bool			eating;
+	// bool			eating;
 	bool			done_eating;
-
-	long long			time_since_last_meal; // init to what
+	long long		timestamp_last_meal;
 	struct s_table	*table; // reference to table data
-
-
 	pthread_mutex_t	*m_left_fork;
 	pthread_mutex_t	*m_right_fork;
-
 	pthread_t		thread;
-
-	// pthread_mutex_t	*mutex_number_meals_eaten;
-	// pthread_mutex_t	*mutex_last_time_eating;
-	// timestamp??
-	// flag if the philo is dead?
-	// flag if philo is full (optional)
-	// last timestamp phil ate
-
-	// ...
 } t_philo;
 
 typedef struct s_table {
@@ -64,17 +48,13 @@ typedef struct s_table {
 
 	bool		dead_flag; // false if no philo is dead, true if philo is dead
 	long long	start_time;
-
-
-////
-
 	t_philo		*philos;
 	// pthread_t	*threads_phil;
 	// mutex for shared ressources
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	m_print; // protects who can write
-	pthread_mutex_t	m_dead; // protects is_dead flag
-	pthread_mutex_t	m_meal; // protects
+	// pthread_mutex_t	m_dead; // protects is_dead flag
+	// pthread_mutex_t	m_meal; // protects
 
 } t_table;
 
@@ -89,5 +69,16 @@ int ft_clean_up(t_table *table);
 
 //helper
 int	ft_atoi(const char *str);
+long long	ft_timestamp(void);
+int	ft_print(t_philo *philo, char *str);
+int	ft_validate_input(int count, char **input);
+
+// start
+int	ft_start_procedure(t_table *table);
+void	*ft_routine(void *philo_input);
+
+void	*ft_monitor(void *table_input);
+
+
 
 #endif

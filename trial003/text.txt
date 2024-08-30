@@ -1,9 +1,0 @@
-naechste Schritte:
-
-- threads richtig starten?
-- aktuell bekomme ich einen seg fault, wenn ich versuche diese mit aufzunehmen
-
-- welche mutexe brauche ich und welche struct jeweils
-- wie / wo init mutex
-
--
