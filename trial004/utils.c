@@ -12,9 +12,10 @@ int ft_clean_up(t_table *table)
     }
     pthread_mutex_destroy(&table->m_print);
     // pthread_mutex_destroy(&table->m_dead);
-    // pthread_mutex_destroy(&table->m_meal);
+    // pthread_mutex_destroy(&table->m_done_eating);
     free(table->forks);
     free(table->philos);
+	free(table);
     return (0);
 }
 
@@ -48,7 +49,7 @@ int	ft_print(t_philo *philo, char *str)
 	// printf("philo start time %i\n", table->start_time	);
 	time = ft_timestamp() - table->start_time;
 	// printf("philo id %i\n", philo->id);
-	if (philo->table->dead_flag == false)
+	if (read_dead_flag(&table->philos[0]) == false)
 	{
 		pthread_mutex_lock(&table->m_print);
 		printf("%lld %d %s\n", time, philo->id, str);
@@ -58,4 +59,16 @@ int	ft_print(t_philo *philo, char *str)
 	return (1);
 }
 
+int flag_death(t_table *table)
+{
+	int flag = 0;
+
+	// pthread_mutex_lock(&table->m_dead);
+	if (read_dead_flag(&table->philos[0]) == true)
+	{
+		flag = 1;
+	}
+	// pthread_mutex_unlock(&table->m_dead);
+	return (flag);
+}
 

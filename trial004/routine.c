@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   routine.pseudo.c                                   :+:      :+:    :+:   */
+/*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: chbuerge <chbuerge@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 09:51:24 by chbuerge          #+#    #+#             */
-/*   Updated: 2024/08/30 17:05:00 by chbuerge         ###   ########.fr       */
+/*   Updated: 2024/08/31 13:06:38 by chbuerge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,17 @@
 // think
     // for the calculated time
 // }
-
+bool	read_dead_flag(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->table->m_dead);
+	if (philo->table->dead_flag == false)
+	{
+		pthread_mutex_unlock(&philo->table->m_dead);
+		return (false);
+	}
+	pthread_mutex_unlock(&philo->table->m_dead);
+	return (true);
+}
 int	ft_eat(t_philo *philo)
 {
 	//printf("ft_eat\n");
@@ -59,7 +69,9 @@ int	ft_eat(t_philo *philo)
 		pthread_mutex_unlock(philo->m_right_fork);
 		return (1);
 	}
+	pthread_mutex_lock(&philo->table->m_timestamp);
 	philo->timestamp_last_meal = ft_timestamp();
+	pthread_mutex_unlock(&philo->table->m_timestamp);
 	usleep(philo->table->time_to_eat * 1000);
 
 	pthread_mutex_unlock(philo->m_left_fork);
@@ -74,7 +86,9 @@ int	ft_eat(t_philo *philo)
 	// printf("philo %d has eaten %d times\n", philo->id, philo->nb_of_meals_eaten);
 	if (philo->nb_of_meals_eaten == philo->table->nb_of_meals)
 	{
+		pthread_mutex_lock(&philo->table->m_done_eating);
 		philo->done_eating = true; // philo is full
+		pthread_mutex_unlock(&philo->table->m_done_eating);
 		return (1);
 	}
 	return (0);
@@ -92,7 +106,7 @@ int	ft_sleep(t_philo *philo)
 int	ft_think(t_philo *philo)
 {
 	// printf("philo %d is thinking\n", philo->id);
-	if(philo->table->dead_flag == false)
+	if(read_dead_flag(philo) == false)
 	{
 		ft_print(philo, "is thinking");
 		return (0);
@@ -111,7 +125,7 @@ void	*ft_routine(void *philo_input)
 	// printf("\nft_routine, philo id %d\n\n", philo->id);
 	// while loop
 	// philo->timestamp_last_meal = ft_timestamp();
-	while (philo->table->dead_flag == false)
+	while (read_dead_flag(philo) == false)
 	{
 		if (ft_eat(philo) == 1)
 			return (0);
@@ -123,3 +137,4 @@ void	*ft_routine(void *philo_input)
 	}
 	return (0);
 }
+

@@ -6,7 +6,7 @@
 /*   By: chbuerge <chbuerge@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 15:22:01 by chbuerge          #+#    #+#             */
-/*   Updated: 2024/08/30 17:50:36 by chbuerge         ###   ########.fr       */
+/*   Updated: 2024/08/31 13:10:03 by chbuerge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,9 @@ typedef struct s_table {
 	// mutex for shared ressources
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	m_print; // protects who can write
-	// pthread_mutex_t	m_dead; // protects is_dead flag
-	// pthread_mutex_t	m_meal; // protects
+	pthread_mutex_t	m_dead; // protects is_dead flag
+	pthread_mutex_t	m_done_eating; // protects
+	pthread_mutex_t m_timestamp;
 
 } t_table;
 
@@ -79,6 +80,6 @@ void	*ft_routine(void *philo_input);
 
 void	*ft_monitor(void *table_input);
 
-
+bool	read_dead_flag(t_philo *philo);
 
 #endif
