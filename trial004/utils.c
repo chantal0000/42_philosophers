@@ -11,8 +11,9 @@ int ft_clean_up(t_table *table)
         i++;
     }
     pthread_mutex_destroy(&table->m_print);
-    // pthread_mutex_destroy(&table->m_dead);
-    // pthread_mutex_destroy(&table->m_done_eating);
+    pthread_mutex_destroy(&table->m_dead);
+    pthread_mutex_destroy(&table->m_done_eating);
+	pthread_mutex_destroy(&table->m_timestamp);
     free(table->forks);
     free(table->philos);
 	free(table);
@@ -46,9 +47,7 @@ int	ft_print(t_philo *philo, char *str)
 	long long	time;
 
 	table = philo->table;
-	// printf("philo start time %i\n", table->start_time	);
 	time = ft_timestamp() - table->start_time;
-	// printf("philo id %i\n", philo->id);
 	if (read_dead_flag(&table->philos[0]) == false)
 	{
 		pthread_mutex_lock(&table->m_print);
@@ -59,16 +58,24 @@ int	ft_print(t_philo *philo, char *str)
 	return (1);
 }
 
-int flag_death(t_table *table)
+// int flag_death(t_table *table)
+// {
+// 	int flag = 0;
+// 	if (read_dead_flag(&table->philos[0]) == true)
+// 	{
+// 		flag = 1;
+// 	}
+// 	return (flag);
+// }
+
+bool	read_dead_flag(t_philo *philo)
 {
-	int flag = 0;
-
-	// pthread_mutex_lock(&table->m_dead);
-	if (read_dead_flag(&table->philos[0]) == true)
+	pthread_mutex_lock(&philo->table->m_dead);
+	if (philo->table->dead_flag == false)
 	{
-		flag = 1;
+		pthread_mutex_unlock(&philo->table->m_dead);
+		return (false);
 	}
-	// pthread_mutex_unlock(&table->m_dead);
-	return (flag);
+	pthread_mutex_unlock(&philo->table->m_dead);
+	return (true);
 }
-

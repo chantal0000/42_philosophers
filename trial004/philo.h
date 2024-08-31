@@ -6,7 +6,7 @@
 /*   By: chbuerge <chbuerge@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 15:22:01 by chbuerge          #+#    #+#             */
-/*   Updated: 2024/08/31 13:10:03 by chbuerge         ###   ########.fr       */
+/*   Updated: 2024/08/31 13:23:38 by chbuerge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ struct t_table;
 typedef struct s_philo {
 	int				id;
 	int				nb_of_meals_eaten;
-	// bool			eating;
 	bool			done_eating;
 	long long		timestamp_last_meal;
 	struct s_table	*table; // reference to table data

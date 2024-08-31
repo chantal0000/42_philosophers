@@ -6,13 +6,11 @@
 /*   By: chbuerge <chbuerge@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 09:48:18 by chbuerge          #+#    #+#             */
-/*   Updated: 2024/08/30 13:18:23 by chbuerge         ###   ########.fr       */
+/*   Updated: 2024/08/31 13:30:26 by chbuerge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "philo.h"
-
-
+#include "philo.h"
 
 int	ft_start_procedure(t_table *table)
 {
@@ -20,16 +18,13 @@ int	ft_start_procedure(t_table *table)
 	pthread_t	monitor;
 
 	i = 0;
-//save the time of the start?
 	table->start_time = ft_timestamp();
-	// printf("start time %lld\n", table->start_time);
-	// create thread for tracker
 	if (pthread_create(&monitor, NULL, ft_monitor, table) != 0)
 		return (1);
-	// create thread for philos
 	while (i < table->nb_of_philos)
 	{
-		if (pthread_create(&table->philos[i].thread, NULL, ft_routine, &table->philos[i]) != 0)
+		if (pthread_create(&table->philos[i].thread, NULL, ft_routine, \
+		&table->philos[i]) != 0)
 			return (1);
 		i++;
 	}
