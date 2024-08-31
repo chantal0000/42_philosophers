@@ -6,16 +6,17 @@
 /*   By: chbuerge <chbuerge@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 09:51:24 by chbuerge          #+#    #+#             */
-/*   Updated: 2024/08/31 13:33:39 by chbuerge         ###   ########.fr       */
+/*   Updated: 2024/08/31 17:17:27 by chbuerge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "philo.h"
+#include "philo.h"
 
 int	ft_eat(t_philo *philo)
 {
 	pthread_mutex_lock(philo->m_left_fork);
-	if (ft_print(philo, "takes fork left") == 1)
+	// printf("left: %p\n",  (void*)philo->m_left_fork);
+	if (ft_print(philo, "has taken a fork") == 1)
 	{
 		pthread_mutex_unlock(philo->m_left_fork);
 		return (1);
@@ -26,7 +27,8 @@ int	ft_eat(t_philo *philo)
 		return (1);
 	}
 	pthread_mutex_lock(philo->m_right_fork);
-	if (ft_print(philo, "takes fork right") == 1)
+	// printf("right: %p\n",  (void*)philo->m_right_fork);
+	if (ft_print(philo, "has taken a fork") == 1)
 	{
 		pthread_mutex_unlock(philo->m_left_fork);
 		pthread_mutex_unlock(philo->m_right_fork);
@@ -41,6 +43,7 @@ int	ft_eat(t_philo *philo)
 	pthread_mutex_lock(&philo->table->m_timestamp);
 	philo->timestamp_last_meal = ft_timestamp();
 	pthread_mutex_unlock(&philo->table->m_timestamp);
+
 	usleep(philo->table->time_to_eat * 1000);
 
 	pthread_mutex_unlock(philo->m_left_fork);
@@ -82,7 +85,7 @@ void	*ft_routine(void *philo_input)
 	i = 0;
 	philo = (t_philo *)philo_input;
 	if (philo->id % 2 == 0)
-		usleep(1000);
+		usleep(philo->table->time_to_eat * 1000);
 	while (read_dead_flag(philo) == false)
 	{
 		if (ft_eat(philo) == 1)

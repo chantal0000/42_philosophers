@@ -6,24 +6,24 @@
 /*   By: chbuerge <chbuerge@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 17:39:30 by chbuerge          #+#    #+#             */
-/*   Updated: 2024/08/30 18:35:50 by chbuerge         ###   ########.fr       */
+/*   Updated: 2024/08/31 17:24:32 by chbuerge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
 // check if char *str only contains of numbers
-int	ft_isdigit(char *str)
-{
-	printf("string %s\n", str);
-	while (*str)
-	{
-		if (*str < '1' || *str > '9' || *str == ' ')
-			return (1);
-		str++;
-	}
-	return (0);
-}
+// int	ft_isdigit(char *str)
+// {
+// 	printf("string %s\n", str);
+// 	while (*str)
+// 	{
+// 		if (*str < '1' || *str > '9' || *str == ' ')
+// 			return (1);
+// 		str++;
+// 	}
+// 	return (0);
+// }
 // conditions to check:
 // min 4 arguments && max 5 arguments ✅
 // max 200 philosophers
@@ -31,7 +31,7 @@ int	ft_isdigit(char *str)
 // should things be bigger than 1? not less than 60ms
 int	ft_validate_input(int count, char **input)
 {
-	int i;
+	int	i;
 
 	i = 1;
 	if (count == 5 || count == 6)

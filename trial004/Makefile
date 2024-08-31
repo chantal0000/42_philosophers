@@ -6,15 +6,15 @@
 #    By: chbuerge <chbuerge@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/20 12:06:09 by chbuerge          #+#    #+#              #
-#    Updated: 2024/08/31 12:33:26 by chbuerge         ###   ########.fr        #
+#    Updated: 2024/08/31 18:20:34 by chbuerge         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo
 
-#CC		= CC
-CFLAGS	= -Wall -Wextra -Werror -g
-
+CC		= cc
+CFLAGS	= -Wall -Wextra -Werror  -g
+#-fsanitize=thread
 SRC =	main.c \
 		input_validation.c \
 		init.c \

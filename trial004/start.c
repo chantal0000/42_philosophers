@@ -6,7 +6,7 @@
 /*   By: chbuerge <chbuerge@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 09:48:18 by chbuerge          #+#    #+#             */
-/*   Updated: 2024/08/31 13:30:26 by chbuerge         ###   ########.fr       */
+/*   Updated: 2024/08/31 15:07:09 by chbuerge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,7 @@ int	ft_start_procedure(t_table *table)
 		return (1);
 	while (i < table->nb_of_philos)
 	{
-		if (pthread_create(&table->philos[i].thread, NULL, ft_routine, \
-		&table->philos[i]) != 0)
+		if (pthread_create(&table->philos[i].thread, NULL, ft_routine, &table->philos[i]) != 0)
 			return (1);
 		i++;
 	}

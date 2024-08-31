@@ -1,29 +1,45 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: chbuerge <chbuerge@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/31 17:21:56 by chbuerge          #+#    #+#             */
+/*   Updated: 2024/08/31 17:23:23 by chbuerge         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
-int ft_clean_up(t_table *table)
+int	ft_clean_up(t_table *table)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    while (i < table->nb_of_philos)
-    {
-        pthread_mutex_destroy(&table->forks[i]);
-        i++;
-    }
-    pthread_mutex_destroy(&table->m_print);
-    pthread_mutex_destroy(&table->m_dead);
-    pthread_mutex_destroy(&table->m_done_eating);
+	i = 0;
+	while (i < table->nb_of_philos)
+	{
+		pthread_mutex_destroy(&table->forks[i]);
+		i++;
+	}
+	pthread_mutex_destroy(&table->m_print);
+	pthread_mutex_destroy(&table->m_dead);
+	pthread_mutex_destroy(&table->m_done_eating);
 	pthread_mutex_destroy(&table->m_timestamp);
-    free(table->forks);
-    free(table->philos);
+	free(table->forks);
+	free(table->philos);
 	free(table);
-    return (0);
+	return (0);
 }
 
 // ft get timestamp function
 // convert the time from fct into miliseconds
 // combines seconds and microseconds into single value (ms)
 // time in MILLISECONDS
+// current_time.tv_sec -> number of seconds since UNIX epoch (jan, 01, 1970)
+// current_time.tv_usec -> microseconds part of current time
+// * 1000 convert seconds into ms
+// / 1000 convert microsecond part to miliseconds
 long long	ft_timestamp(void)
 {
 	long long		timestamp_ms;
@@ -32,10 +48,6 @@ long long	ft_timestamp(void)
 	timestamp_ms = 0;
 	if (!gettimeofday(&current_time, NULL))
 	{
-		// current_time.tv_sec -> number of seconds since UNIX epoch (jan, 01, 1970)
-		// current_time.tv_usec -> microseconds part of current time
-		// * 1000 convert seconds into ms
-		// / 1000 convert microsecond part to miliseconds
 		timestamp_ms = current_time.tv_sec * 1000 + current_time.tv_usec / 1000;
 	}
 	return (timestamp_ms);
@@ -43,7 +55,7 @@ long long	ft_timestamp(void)
 
 int	ft_print(t_philo *philo, char *str)
 {
-	t_table	*table;
+	t_table		*table;
 	long long	time;
 
 	table = philo->table;
@@ -57,16 +69,6 @@ int	ft_print(t_philo *philo, char *str)
 	}
 	return (1);
 }
-
-// int flag_death(t_table *table)
-// {
-// 	int flag = 0;
-// 	if (read_dead_flag(&table->philos[0]) == true)
-// 	{
-// 		flag = 1;
-// 	}
-// 	return (flag);
-// }
 
 bool	read_dead_flag(t_philo *philo)
 {

@@ -6,7 +6,7 @@
 /*   By: chbuerge <chbuerge@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 13:24:25 by chbuerge          #+#    #+#             */
-/*   Updated: 2024/08/31 13:29:06 by chbuerge         ###   ########.fr       */
+/*   Updated: 2024/08/31 17:23:56 by chbuerge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	ft_init_mutexes(t_table *table)
 	return (0);
 }
 
-void	ft_init_philos(t_table *table)
+int	ft_init_philos(t_table *table)
 {
 	int	i;
 
@@ -38,10 +38,10 @@ void	ft_init_philos(t_table *table)
 		table->philos[i].timestamp_last_meal = ft_timestamp();
 		table->philos[i].table = table;
 		table->philos[i].m_left_fork = &table->forks[i];
-		table->philos[i].m_right_fork = &table->forks[(i + 1) % \
-		table->nb_of_philos];
+		table->philos[i].m_right_fork = &table->forks[(i + 1) % table->nb_of_philos];
 		i++;
 	}
+	return (0);
 }
 
 void	ft_init_input(t_table *table, char **input)
@@ -75,7 +75,8 @@ int	ft_init(t_table *table, char **input)
 			return (1);
 		i++;
 	}
-	ft_init_philos(table);
+	if (ft_init_philos(table) == 1)
+		return (1);
 	if (ft_init_mutexes(table) == 1)
 		return (1);
 	return (0);
