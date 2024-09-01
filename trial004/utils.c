@@ -6,7 +6,7 @@
 /*   By: chbuerge <chbuerge@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 17:21:56 by chbuerge          #+#    #+#             */
-/*   Updated: 2024/08/31 17:23:23 by chbuerge         ###   ########.fr       */
+/*   Updated: 2024/09/01 11:20:40 by chbuerge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	ft_clean_up(t_table *table)
 // current_time.tv_usec -> microseconds part of current time
 // * 1000 convert seconds into ms
 // / 1000 convert microsecond part to miliseconds
-long long	ft_timestamp(void)
+long long	ft_ts(void)
 {
 	long long		timestamp_ms;
 	struct timeval	current_time;
@@ -59,7 +59,7 @@ int	ft_print(t_philo *philo, char *str)
 	long long	time;
 
 	table = philo->table;
-	time = ft_timestamp() - table->start_time;
+	time = ft_ts() - table->start_t;
 	if (read_dead_flag(&table->philos[0]) == false)
 	{
 		pthread_mutex_lock(&table->m_print);

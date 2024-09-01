@@ -6,7 +6,7 @@
 /*   By: chbuerge <chbuerge@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 15:22:01 by chbuerge          #+#    #+#             */
-/*   Updated: 2024/08/31 17:21:34 by chbuerge         ###   ########.fr       */
+/*   Updated: 2024/09/01 11:29:29 by chbuerge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <unistd.h> // usleep
 # include <sys/time.h> // gettimeofday
 # include <stdbool.h> // bool
+# include <limits.h>
 
 struct	s_philo;
 struct	s_table;
@@ -44,7 +45,7 @@ typedef struct s_table {
 	int				nb_of_meals;
 
 	bool			dead_flag;
-	long long		start_time;
+	long long		start_t;
 	t_philo			*philos;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	m_print;
@@ -58,7 +59,7 @@ int			ft_init(t_table *table, char **input);
 int			ft_clean_up(t_table *table);
 //helper
 int			ft_atoi(const char *str);
-long long	ft_timestamp(void);
+long long	ft_ts(void);
 int			ft_print(t_philo *philo, char *str);
 int			ft_validate_input(int count, char **input);
 // start
@@ -67,4 +68,12 @@ void		*ft_routine(void *philo_input);
 void		*ft_monitor(void *table_input);
 bool		read_dead_flag(t_philo *philo);
 
+// routine
+int			ft_think(t_philo *philo);
+int			ft_sleep(t_philo *philo);
+int			ft_eat(t_philo *philo);
+
+void		set_timestamp(t_philo *philo);
+void		unlock_double_mutex(pthread_mutex_t *mutex1,
+				pthread_mutex_t *mutex2);
 #endif

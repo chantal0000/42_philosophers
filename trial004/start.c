@@ -6,11 +6,33 @@
 /*   By: chbuerge <chbuerge@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 09:48:18 by chbuerge          #+#    #+#             */
-/*   Updated: 2024/08/31 15:07:09 by chbuerge         ###   ########.fr       */
+/*   Updated: 2024/09/01 11:20:40 by chbuerge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void	*ft_routine(void *philo_input)
+{
+	t_philo	*philo;
+	int		i;
+
+	i = 0;
+	philo = (t_philo *)philo_input;
+	if (philo->id % 2 == 0)
+		usleep(philo->table->time_to_eat * 1000);
+	while (read_dead_flag(philo) == false)
+	{
+		if (ft_eat(philo) == 1)
+			return (0);
+		if (ft_sleep(philo) == 1)
+			return (0);
+		if (ft_think(philo) == 1)
+			return (0);
+		i++;
+	}
+	return (0);
+}
 
 int	ft_start_procedure(t_table *table)
 {
@@ -18,12 +40,13 @@ int	ft_start_procedure(t_table *table)
 	pthread_t	monitor;
 
 	i = 0;
-	table->start_time = ft_timestamp();
+	table->start_t = ft_ts();
 	if (pthread_create(&monitor, NULL, ft_monitor, table) != 0)
 		return (1);
 	while (i < table->nb_of_philos)
 	{
-		if (pthread_create(&table->philos[i].thread, NULL, ft_routine, &table->philos[i]) != 0)
+		if (pthread_create(&table->philos[i].thread, NULL, ft_routine,
+				&table->philos[i]) != 0)
 			return (1);
 		i++;
 	}
